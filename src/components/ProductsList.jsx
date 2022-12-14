@@ -1,17 +1,19 @@
 import { useQuery } from "react-query";
 import API from "../config/axios";
-import { Row, Col, Card, Typography } from "antd";
+import { Row, Col, Card, Typography, Image } from "antd";
 
 const { Title } = Typography;
 const { Meta } = Card;
 
+const fetchProductsList = () => API.get("products").then((res) => res.data);
+
 const Userlist = () => {
-  const { isLoading, error, data, isFetching } = useQuery("repoData", () =>
-    API.get("products").then((res) => res.data)
-  );
-  if (isLoading) return <>Loading...............</>;
-  if (error) return <>Error</>;
-  console.log(data, "data is here");
+  const { isLoading, error, data } = useQuery("Propducts", fetchProductsList);
+
+  if (isLoading) return <h2>Loading...</h2>;
+
+  if (error) return <h2>Error: {error?.message}</h2>;
+
   return (
     <>
       <Row justify="center">
@@ -19,16 +21,15 @@ const Userlist = () => {
       </Row>
       <Row gutter={[16, 16]}>
         {data.map((item, idx) => (
-          <Col span={6}>
+          <Col lg={6} md={12} sm={24} key={idx}>
             <Card
               hoverable
-              key={idx}
+              style={{ maxWidth: 400 }}
               cover={
-                <img
+                <Image
                   alt="example"
                   src={item.image}
-                  maxHeigh={280}
-                  maxWidth={240}
+                  style={{ objectFit: "contain", objectPosition: "right" }}
                 />
               }
             >
